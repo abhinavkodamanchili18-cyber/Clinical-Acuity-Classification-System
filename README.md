@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a simple app with data structures 
+This project is a app with data structures 
 
 ## Description
 
