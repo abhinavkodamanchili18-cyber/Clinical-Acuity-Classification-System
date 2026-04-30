@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Triage System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0b0520 0%, #2a1a55 50%, #1c113a 100%);
+            color: #e8e4f8;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #c77bff, #7d40ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(199, 123, 255, 0.28);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(199, 123, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.8s ease-out;
+            box-shadow: 0 8px 32px rgba(199, 123, 255, 0.09);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card h2 {
+            color: #c77bff;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #d7b7ff;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(199, 123, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #e0e0e0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #c77bff;
+            background: rgba(199, 123, 255, 0.1);
+            box-shadow: 0 0 10px rgba(199, 123, 255, 0.24);
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(199, 123, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background: rgba(199, 123, 255, 0.1);
+            border-color: #c77bff;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            margin-right: 10px;
+            accent-color: #c77bff;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #c77bff, #7d40ff);
+            color: #000;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(199, 123, 255, 0.35);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 87, 87, 0.2);
+            color: #ff5757;
+            border: 1px solid #ff5757;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 87, 87, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 87, 87, 0.2);
+        }
+
+        .btn-tertiary {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+
+        .btn-tertiary:hover {
+            background: rgba(76, 175, 80, 0.3);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+        }
+
+        .result-box {
+            background: rgba(199, 123, 255, 0.1);
+            border: 2px solid #c77bff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0;
+            font-size: 1rem;
+        }
+
+        .result-label {
+            color: #b0d4ff;
+            font-weight: 500;
+        }
+
+        .result-value {
+            color: #c77bff;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .emergency-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .level-1 {
+            background: rgba(76, 175, 80, 0.3);
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+
+        .level-2 {
+            background: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .level-3 {
+            background: rgba(255, 152, 0, 0.3);
+            color: #ff9800;
+            border: 1px solid #ff9800;
+        }
+
+        .level-4 {
+            background: rgba(244, 67, 54, 0.3);
+            color: #f44336;
+            border: 1px solid #f44336;
+        }
+
+        .level-5 {
+            background: rgba(229, 57, 53, 0.3);
+            color: #e53935;
+            border: 1px solid #e53935;
+            box-shadow: 0 0 15px rgba(229, 57, 53, 0.4);
+        }
+
+        .table-section {
+            margin-top: 30px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-header h2 {
+            color: #c77bff;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(199, 123, 255, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: rgba(199, 123, 255, 0.1);
+            border-bottom: 2px solid rgba(199, 123, 255, 0.3);
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            color: #c77bff;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(199, 123, 255, 0.1);
+            color: #e0e0e0;
+        }
+
+        tr:hover {
+            background: rgba(199, 123, 255, 0.05);
+        }
+
+        tr.highlight {
+            background: rgba(199, 123, 255, 0.15);
+            border-left: 4px solid #c77bff;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #808080;
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            background: rgba(229, 57, 53, 0.3);
+            color: #e53935;
+        }
+
+        .priority-medium {
+            background: rgba(255, 152, 0, 0.3);
+            color: #ff9800;
+        }
+
+        .priority-low {
+            background: rgba(76, 175, 80, 0.3);
+            color: #4caf50;
+        }
+
+        .treatment-order {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(199, 123, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.8s ease-out;
+            box-shadow: 0 8px 32px rgba(199, 123, 255, 0.09);
+            margin-top: 30px;
+            display: none;
+        }
+
+        .treatment-order.show {
+            display: block;
+        }
+
+        .treatment-order h2 {
+            color: #c77bff;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .treatment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .treatment-item {
+            background: rgba(199, 123, 255, 0.1);
+            border-left: 4px solid #c77bff;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .treatment-item:hover {
+            background: rgba(199, 123, 255, 0.15);
+            transform: translateX(5px);
+        }
+
+        .treatment-item.first {
+            background: rgba(255, 215, 0, 0.15);
+            border-left-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .treatment-rank {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #c77bff;
+            width: 50px;
+            text-align: center;
+        }
+
+        .treatment-info {
+            flex: 1;
+            margin: 0 20px;
+        }
+
+        .treatment-name {
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .treatment-details {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .treatment-priority {
+            background: rgba(199, 123, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: #c77bff;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .spin {
+            animation: spin 0.6s ease-in-out;
+        }
+
+        @keyframes spin {
+            0% { transform: scale(0.95) rotate(-10deg); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #a99be4;
+            font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid rgba(199, 123, 255, 0.1);
+        }
+
+        .pain-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(199, 123, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c77bff, #7d40ff);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(199, 123, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c77bff, #7d40ff);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(199, 123, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .pain-value {
+            min-width: 40px;
+            text-align: center;
+            color: #c77bff;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+
+            .control-buttons {
+                flex-direction: column;
+            }
+
+            .control-buttons button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏥 Clinical Acuity Classification System</h1>
+            <p>Priority-Based Emergency Handling Dashboard</p>
+        </header>
+
+        <!-- Patient Registration Form -->
+        <div class="card" style="max-width: 600px; margin: 0 auto;">
+            <h2><span class="icon">📋</span> Patient Registration</h2>
+            <form id="triageForm">
+                <div class="form-group">
+                    <label for="patientName">Patient Name *</label>
+                    <input type="text" id="patientName" placeholder="Enter patient name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="patientAge">Age (years) *</label>
+                    <input type="number" id="patientAge" min="0" max="150" placeholder="Enter age" required>
+                </div>
+
+                <label style="color: #c77bff; font-weight: 600; margin-top: 20px; margin-bottom: 15px;">
+                    <span class="icon">⚠️</span> Triage Questions
+                </label>
+
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="bleeding" name="bleeding">
+                        <label for="bleeding">Heavy Bleeding</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="chestPain" name="chestPain">
+                        <label for="chestPain">Chest Pain</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="breathing" name="breathing">
+                        <label for="breathing">Difficulty Breathing</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="unconscious" name="unconscious">
+                        <label for="unconscious">Unconscious/Fainting</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="painLevel">Pain Level: <strong id="painDisplay">0</strong>/10</label>
+                    <div class="pain-slider-container">
+                        <input type="range" id="painLevel" min="0" max="10" value="0">
+                        <div class="pain-value" id="painValue">0</div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">
+                        <span class="icon">➕</span> Add Patient
+                    </button>
+                </div>
+            </form>
+
+            <!-- Result Display -->
+            <div id="resultBox" class="result-box">
+                <div class="result-item">
+                    <span class="result-label">Emergency Level:</span>
+                    <span class="result-value" id="emergencyLevel"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Priority Score:</span>
+                    <span class="result-value" id="priorityScore"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Status:</span>
+                    <span id="statusBadge"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patients Table -->
+        <div class="card">
+            <div class="table-header">
+                <h2><span class="icon">👥</span> All Patients</h2>
+                <div class="control-buttons">
+                    <button class="btn-tertiary" id="showTreatmentBtn" style="display: none;">
+                        <span class="icon">🚑</span> Show Treatment Order
+                    </button>
+                    <button class="btn-secondary" id="clearAllBtn" style="display: none;">
+                        <span class="icon">🗑️</span> Clear All
+                    </button>
+                </div>
+            </div>
+
+            <div id="tableContainer">
+                <div class="empty-state">
+                    <p>No patients added yet. Please fill the registration form to add a patient.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Treatment Order -->
+        <div id="treatmentOrderContainer" class="treatment-order">
+            <h2><span class="icon">🚑</span> Treatment Order (By Priority)</h2>
+            <div id="treatmentList" class="treatment-list"></div>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 Patient Triage System | Emergency Priority Queue Management</p>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // MAX HEAP IMPLEMENTATION (PRIORITY QUEUE)
+        // ============================================
+        class MaxHeap {
+            constructor() {
+                this.heap = [];
+            }
+
+            // Get parent index
+            getParentIndex(index) {
+                return Math.floor((index - 1) / 2);
+            }
+
+            // Get left child index
+            getLeftChildIndex(index) {
+                return 2 * index + 1;
+            }
+
+            // Get right child index
+            getRightChildIndex(index) {
+                return 2 * index + 2;
+            }
+
+            // Swap elements
+            swap(index1, index2) {
+                [this.heap[index1], this.heap[index2]] = [this.heap[index2], this.heap[index1]];
+            }
+
+            // Add element to heap
+            insert(patient) {
+                this.heap.push(patient);
+                this.heapifyUp(this.heap.length - 1);
+            }
+
+            // Heapify up (bubble up)
+            heapifyUp(index) {
+                while (index > 0 && this.heap[this.getParentIndex(index)].priority < this.heap[index].priority) {
+                    this.swap(index, this.getParentIndex(index));
+                    index = this.getParentIndex(index);
+                }
+            }
+
+            // Heapify down (bubble down)
+            heapifyDown(index) {
+                let largest = index;
+                const leftChild = this.getLeftChildIndex(index);
+                const rightChild = this.getRightChildIndex(index);
+
+                if (leftChild < this.heap.length && this.heap[leftChild].priority > this.heap[largest].priority) {
+                    largest = leftChild;
+                }
+
+                if (rightChild < this.heap.length && this.heap[rightChild].priority > this.heap[largest].priority) {
+                    largest = rightChild;
+                }
+
+                if (largest !== index) {
+                    this.swap(index, largest);
+                    this.heapifyDown(largest);
+                }
+            }
+
+            // Remove max element (root)
+            removeMax() {
+                if (this.heap.length === 0) return null;
+                if (this.heap.length === 1) return this.heap.pop();
+
+                const max = this.heap[0];
+                this.heap[0] = this.heap.pop();
+                this.heapifyDown(0);
+                return max;
+            }
+
+            // Get all patients in priority order
+            getSortedPatients() {
+                const sorted = [];
+                const tempHeap = [...this.heap];
+                const tempHeapObj = new MaxHeap();
+                tempHeapObj.heap = tempHeap;
+
+                while (tempHeapObj.heap.length > 0) {
+                    sorted.push(tempHeapObj.removeMax());
+                }
+
+                return sorted;
+            }
+
+            // Get size
+            size() {
+                return this.heap.length;
+            }
+
+            // Clear heap
+            clear() {
+                this.heap = [];
+            }
+
+            // Get all patients (not sorted)
+            getAllPatients() {
+                return this.heap;
+            }
+        }
+
+        // ============================================
+        // GLOBAL STATE & INITIALIZATION
+        // ============================================
+        const patientQueue = new MaxHeap();
+        let patientCounter = 0;
+
+        // ============================================
+        // TRIAGE SCORING LOGIC
+        // ============================================
+        function calculateEmergencyScore(symptoms) {
+            let score = 0;
+
+            if (symptoms.bleeding) score += 3;
+            if (symptoms.chestPain) score += 3;
+            if (symptoms.breathing) score += 3;
+            if (symptoms.unconscious) score += 4;
+
+            // Pain level scoring
+            if (symptoms.pain >= 8) score += 3;
+            else if (symptoms.pain >= 5) score += 2;
+            else if (symptoms.pain >= 2) score += 1;
+
+            return score;
+        }
+
+        function getEmergencyLevel(score) {
+            if (score >= 12) return 5;
+            if (score >= 9) return 4;
+            if (score >= 6) return 3;
+            if (score >= 3) return 2;
+            return 1;
+        }
+
+        function calculatePriority(emergencyLevel, age) {
+            let priority = emergencyLevel * 10;
+            if (age > 60) priority += 5;
+            return priority;
+        }
+
+        function getEmergencyLevelName(level) {
+            const names = {
+                1: "Non-Emergency",
+                2: "Minor",
+                3: "Moderate",
+                4: "Severe",
+                5: "Critical"
+            };
+            return names[level] || "Unknown";
+        }
+
+        function getEmergencyLevelClass(level) {
+            return `level-${level}`;
+        }
+
+        // ============================================
+        // EVENT LISTENERS & FORM HANDLING
+        // ============================================
+        const triageForm = document.getElementById('triageForm');
+        const painLevelInput = document.getElementById('painLevel');
+        const painValueDisplay = document.getElementById('painValue');
+        const painDisplay = document.getElementById('painDisplay');
+
+        painLevelInput.addEventListener('input', (e) => {
+            const value = e.target.value;
+            painValueDisplay.textContent = value;
+            painDisplay.textContent = value;
+        });
+
+        triageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            addPatient();
+        });
+
+        function addPatient() {
+            const name = document.getElementById('patientName').value.trim();
+            const age = parseInt(document.getElementById('patientAge').value);
+            const bleeding = document.getElementById('bleeding').checked;
+            const chestPain = document.getElementById('chestPain').checked;
+            const breathing = document.getElementById('breathing').checked;
+            const unconscious = document.getElementById('unconscious').checked;
+            const pain = parseInt(document.getElementById('painLevel').value);
+
+            if (!name || !age) {
+                alert('Please fill in all required fields!');
+                return;
+            }
+
+            // Calculate scores
+            const symptoms = { bleeding, chestPain, breathing, unconscious, pain };
+            const score = calculateEmergencyScore(symptoms);
+            const emergencyLevel = getEmergencyLevel(score);
+            const priority = calculatePriority(emergencyLevel, age);
+
+            // Create patient object
+            const patient = {
+                id: ++patientCounter,
+                name,
+                age,
+                symptoms,
+                score,
+                emergencyLevel,
+                priority,
+                timestamp: new Date(),
+                status: getEmergencyLevelName(emergencyLevel)
+            };
+
+            // Add to priority queue
+            patientQueue.insert(patient);
+
+            // Display results
+            displayResults(patient);
+
+            // Update UI
+            updateTableDisplay();
+
+            // Reset form
+            triageForm.reset();
+            painLevelInput.value = 0;
+            painValueDisplay.textContent = 0;
+            painDisplay.textContent = 0;
+
+            // Show control buttons
+            document.getElementById('showTreatmentBtn').style.display = 'inline-block';
+            document.getElementById('clearAllBtn').style.display = 'inline-block';
+        }
+
+        function displayResults(patient) {
+            const resultBox = document.getElementById('resultBox');
+            const emergencyLevelEl = document.getElementById('emergencyLevel');
+            const priorityScoreEl = document.getElementById('priorityScore');
+            const statusBadge = document.getElementById('statusBadge');
+
+            emergencyLevelEl.textContent = patient.emergencyLevel;
+            emergencyLevelEl.className = `result-value spin ${getEmergencyLevelClass(patient.emergencyLevel)}`;
+
+            priorityScoreEl.textContent = patient.priority;
+            priorityScoreEl.className = 'result-value spin';
+
+            statusBadge.innerHTML = `<span class="emergency-badge ${getEmergencyLevelClass(patient.emergencyLevel)}">${patient.status}</span>`;
+            statusBadge.classList.add('spin');
+
+            resultBox.classList.add('show');
+        }
+
+        function updateTableDisplay() {
+            const tableContainer = document.getElementById('tableContainer');
+            const queue = patientQueue.getAllPatients();
+
+            if (queue.length === 0) {
+                tableContainer.innerHTML = `
+                    <div class="empty-state">
+                        <p>No patients added yet. Please fill the registration form to add a patient.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort patients by priority for display
+            const sorted = patientQueue.getSortedPatients();
+            const highestPriority = sorted[0].priority;
+
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Patient Name</th>
+                            <th>Age</th>
+                            <th>Priority</th>
+                            <th>Emergency Level</th>
+                            <th>Pain</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            sorted.forEach((patient, index) => {
+                const isHighest = patient.priority === highestPriority ? 'highlight' : '';
+                const priorityClass = patient.priority >= 20 ? 'priority-high' : patient.priority >= 13 ? 'priority-medium' : 'priority-low';
+
+                tableHTML += `
+                    <tr class="${isHighest}">
+                        <td style="font-weight: 700; color: #c77bff;">${index + 1}</td>
+                        <td>${patient.name}</td>
+                        <td>${patient.age} years</td>
+                        <td><span class="badge ${priorityClass}">${patient.priority}</span></td>
+                        <td><span class="emergency-badge ${getEmergencyLevelClass(patient.emergencyLevel)}">${patient.status}</span></td>
+                        <td>${patient.symptoms.pain}/10</td>
+                        <td><strong>${patient.score}</strong></td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            tableContainer.innerHTML = tableHTML;
+        }
+
+        function showTreatmentOrder() {
+            const sorted = patientQueue.getSortedPatients();
+
+            if (sorted.length === 0) {
+                alert('No patients in queue!');
+                return;
+            }
+
+            const treatmentList = document.getElementById('treatmentList');
+            let treatmentHTML = '';
+
+            sorted.forEach((patient, index) => {
+                const isFirst = index === 0 ? 'first' : '';
+                const priorityBadge = patient.priority >= 20 ? 'priority-high' : patient.priority >= 13 ? 'priority-medium' : 'priority-low';
+
+                treatmentHTML += `
+                    <div class="treatment-item ${isFirst}">
+                        <div class="treatment-rank">#${index + 1}</div>
+                        <div class="treatment-info">
+                            <div class="treatment-name">${patient.name}</div>
+                            <div class="treatment-details">
+                                Age: ${patient.age} | 
+                                Level: <span class="emergency-badge ${getEmergencyLevelClass(patient.emergencyLevel)}">${patient.status}</span>
+                            </div>
+                        </div>
+                        <div class="treatment-priority">${patient.priority}</div>
+                    </div>
+                `;
+            });
+
+            treatmentList.innerHTML = treatmentHTML;
+            document.getElementById('treatmentOrderContainer').classList.add('show');
+        }
+
+        // ============================================
+        // BUTTON EVENT LISTENERS
+        // ============================================
+        document.getElementById('showTreatmentBtn').addEventListener('click', showTreatmentOrder);
+
+        document.getElementById('clearAllBtn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all patients? This action cannot be undone.')) {
+                patientQueue.clear();
+                patientCounter = 0;
+                updateTableDisplay();
+                document.getElementById('resultBox').classList.remove('show');
+                document.getElementById('treatmentOrderContainer').classList.remove('show');
+                document.getElementById('showTreatmentBtn').style.display = 'none';
+                document.getElementById('clearAllBtn').style.display = 'none';
+                triageForm.reset();
+                painLevelInput.value = 0;
+                painValueDisplay.textContent = 0;
+                painDisplay.textContent = 0;
+            }
+        });
+    </script>
+</body>
+</html>
