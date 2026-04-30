@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a simple web application built with HTML. It serves as a starting point for web development projects.
+This project is a simple app with data structures 
 
 ## Description
 
